@@ -48,16 +48,22 @@ public class Gene {
 			decodedValue = "9";			
 			break;
 		case "1010":
-			decodedValue = "+";			
+			decodedValue = "10";			
 			break;
 		case "1011":
-			decodedValue = "-";			
+			decodedValue = "11";			
 			break;
 		case "1100":
-			decodedValue = "*";			
+			decodedValue = "12";			
 			break;
 		case "1101":
-			decodedValue = "/";			
+			decodedValue = "13";			
+			break;
+		case "1110":
+			decodedValue = "14";			
+			break;
+		case "1111":
+			decodedValue = "*";			
 			break;
 		default:
 			decodedValue = "N/A";
