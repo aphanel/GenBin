@@ -3,20 +3,18 @@ package gb;
 import java.util.ArrayList;
 
 public class Chromosome {
-	private ArrayList<Gene>geneList = new ArrayList<Gene>();
 	private StringBuffer stringBuffer = new StringBuffer();
-	private String chromosome = null;
-	private Double fitnessScore = 0.000000;
-	private Double finalFitnessScore = 0.000000;
-	private Integer genesNumber = 7;
-	private Integer lifeLeft = World.LIFE_EXPECTANCY;	
+	private ArrayList<Gene>geneList;
+	private String chromosomeAsString;
+	private Double fitnessScore;
+	private Integer genesNumber;
+	private Integer lifeLeft;	
 	
 	public Chromosome() {
 		super();
 		this.geneList = new ArrayList<Gene>();
-		this.chromosome = null;
+		this.chromosomeAsString = null;
 		this.fitnessScore = 0.000000;
-		this.finalFitnessScore = 0.000000;
 		this.genesNumber = 7;
 		this.lifeLeft = World.LIFE_EXPECTANCY;
 	}
@@ -32,23 +30,51 @@ public class Chromosome {
 	}
 	
 	public String displayGeneListAsString(){
-		if(chromosome != null){
+		if(chromosomeAsString != null){
 			for (Gene gene : this.getGeneList()) {
 				stringBuffer.append(gene.getCode());
 			}	
 		}
-		chromosome = stringBuffer.toString();
+		chromosomeAsString = stringBuffer.toString();
 		stringBuffer = null;
-		return chromosome;
+		return chromosomeAsString;
 	}
 	
 	public void calculateFitness(){
+		if(fitnessScore>0.0)fitnessScore=0.0;
+		int a = 0;
+		String lastGene="";
 		for (Gene gene : geneList) {
-			if(!(gene.decode().equals("N/A"))) stringBuffer.append(gene.decode());
+			if(a==0)lastGene=gene.decode();
+			if((gene.decode().equals("*"))&&((a==0)||(a==genesNumber-1))){
+				lastGene = gene.decode();
+				a++;
+				continue;
+			}
+			if(gene.decode().equals("N/A")){
+				lastGene = gene.decode();
+				a++;
+				continue;
+			}
+			if(!(gene.decode().equals("*"))&&(a>1)&&(lastGene.equals("*"))){
+				fitnessScore *= Integer.valueOf(gene.decode());
+				lastGene = gene.decode();
+				a++;
+				continue;
+			}
+			if(gene.decode().equals("*")&&lastGene.equals("*")){
+				lastGene = gene.decode();
+				a++;
+				continue;
+			}
+			else{
+				fitnessScore += Integer.valueOf(gene.decode());
+				lastGene = gene.decode();
+			}
+			a++;
 		}
-		fitnessScore = Tools.eval(stringBuffer.toString());
-		if((fitnessScore == null)||(fitnessScore<=0.000000||(fitnessScore>=100.000000)||(!(Double.isFinite(fitnessScore)))))fitnessScore = 0.000000;
-		finalFitnessScore = Math.abs(Math.ceil(World.FITNESS_GOAL - fitnessScore));
+		lastGene="";
+		a=0;
 	}
 
 	public ArrayList<Gene> getGeneList() {
@@ -68,11 +94,11 @@ public class Chromosome {
 	}
 
 	public String getChromosome() {
-		return chromosome;
+		return chromosomeAsString;
 	}
 
 	public void setChromosome(String chromosome) {
-		this.chromosome = chromosome;
+		this.chromosomeAsString = chromosome;
 	}
 
 	public Double getFitnessScore() {
@@ -89,14 +115,6 @@ public class Chromosome {
 
 	public void setGenesNumber(Integer genesNumber) {
 		this.genesNumber = genesNumber;
-	}
-
-	public Double getFinalFitnessScore() {
-		return finalFitnessScore;
-	}
-
-	public void setFinalFitnessScore(Double finalFitnessScore) {
-		this.finalFitnessScore = finalFitnessScore;
 	}
 
 	public Integer getLifeLeft() {
