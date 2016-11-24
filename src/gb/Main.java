@@ -10,30 +10,24 @@ public class Main {
 		world.init();
 		
 		//write results in file to compare beginning and end
-		Integer first50 = 0;
-		Integer second50 = 0;		
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/home/aphanel/Documents/scripts/genes"), "utf-8"))) {
-				
-		
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/home/aphanel/Documents/scripts/genes"), "utf-8"))) {				
+			Double startingAverage = 0.0;
+			Double endingAverage = 0.0;
 			for (int i = 0; i < world.getChromosomePool().size(); i++) {
-				writer.write(world.getChromosomePool().get(i).getFinalFitnessScore().toString());
-				if(world.getChromosomePool().get(i).getFinalFitnessScore().toString().equals("50.0")){
-					first50++;
-				}
+				writer.write(world.getChromosomePool().get(i).getFitnessScore().toString()+" ");
+				startingAverage += world.getChromosomePool().get(i).getFitnessScore();
 			}
-			writer.write(first50.toString());
+			writer.write("Starting Average Fitness : "+startingAverage);
 			writer.write("\n");
 			
 			//All the logic happens here
 			world.run();
 			
 			for (int i = 0; i < world.getChromosomePool().size(); i++) {
-				writer.write(world.getChromosomePool().get(i).getFinalFitnessScore().toString());
-				if(world.getChromosomePool().get(i).getFinalFitnessScore().toString().equals("50.0")){
-					second50++;
-				}
+				writer.write(world.getChromosomePool().get(i).getFitnessScore().toString()+" ");
+				endingAverage += world.getChromosomePool().get(i).getFitnessScore();
 			}
-			writer.write(second50.toString());
+			writer.write("Ending Average Fitness : "+endingAverage);
 		}
 	}
 
