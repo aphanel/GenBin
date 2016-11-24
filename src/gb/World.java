@@ -3,15 +3,13 @@ package gb;
 import java.util.ArrayList;
 
 public class World {
-	public final static Double FITNESS_GOAL = 50.000000;
+	public final static Double FITNESS_GOAL = 135.000000;
 	public final static Double CROSSOVER_VALUE = 0.700000;
 	public final static Double MUTATION_VALUE = 0.001000;
 	public final static Integer	LIFE_EXPECTANCY = 5;
-	public final static Double NUMBER_OF_STARTING_CHROMOSOMES = 1000.000000;
-	private Double numberOfChromosomes;
+	public final static Double NUMBER_OF_STARTING_CHROMOSOMES = 300.000000;
+	public final static Double NUMBER_OF_GENERATIONS = 100.000000;
 	private Integer threshold;
-	private Double probability;
-	private ArrayList<Double> weight;
 	private Tools toolbox;
 	private ArrayList<Chromosome> chromosomePool;
 	private Integer index1;
@@ -20,10 +18,7 @@ public class World {
 	
 	public World() {
 		super();
-		this.numberOfChromosomes = NUMBER_OF_STARTING_CHROMOSOMES;
 		this.threshold = 0;
-		this.probability = 0.000000;
-		this.weight = new ArrayList<Double>();	
 		this.toolbox = new Tools();
 		this.chromosomePool = new ArrayList<Chromosome>();	
 		this.index1 = 0;
@@ -35,23 +30,17 @@ public class World {
 			Chromosome chromosome = new Chromosome();
 			chromosome.init();
 			chromosomePool.add(chromosome);
-			
-			//Following is gibberish... rouletteSelect doesn't work as wanted
-			probability = ((1.000000*100.000000)/numberOfChromosomes)/100;
-			probability/=1.000000/chromosome.getFinalFitnessScore();
-			probability*=2.000000;
-			weight.add(probability);
 		}
 	}
 	
 	public void run(){
-		while(threshold<NUMBER_OF_STARTING_CHROMOSOMES*50){
+		while(threshold<NUMBER_OF_STARTING_CHROMOSOMES*NUMBER_OF_GENERATIONS){
 			mate();
 		}
 	}
 	public void mate(){
-		index1 = toolbox.rouletteSelect(weight);
-		index2 = toolbox.rouletteSelect(weight);
+		index1 = toolbox.rouletteSelect(chromosomePool);
+		index2 = toolbox.rouletteSelect(chromosomePool);
 		//Crossover
 		if(toolbox.randUniformPositive()<=CROSSOVER_VALUE)crossover(index1, index2);
 		//mutate
